@@ -52,10 +52,10 @@ class DigitClassifier:
             
     def decode_five(self, sub):
         for num in sub:
-            if (set(self.mapping[1]) - set(self.mapping[4])) <= set(num):
-                self.mapping[5] = num
-            elif set(self.mapping[1]) <= set(num):
+            if set(self.mapping[1]) <= set(num):
                 self.mapping[3] = num
+            elif (set(self.mapping[4]) - set(self.mapping[1])) <= set(num):
+                self.mapping[5] = num
             else:
                 self.mapping[2] = num
 
@@ -80,18 +80,18 @@ class DigitClassifier:
 with open(sys.argv[1], 'r') as in_file:
     line_set = [line.rstrip() for line in in_file]
 
+
 all_numbers = []
 output = []
 for x in line_set:
     split_up = re.findall('[a-g]{2,7}', x)
     split_up = ["".join(sorted(a)) for a in split_up]
-    all_numbers.append(split_up[:9])
+    all_numbers.append(split_up[:10])
     output.append(split_up[10:])
 
 total = 0
 for helpers, outs in zip(all_numbers, output):
     subject = DigitClassifier(helpers, outs)
-    print(subject.mapping)
     total += subject.decode_output()
 
 print(total)
