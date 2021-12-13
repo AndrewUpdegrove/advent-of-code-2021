@@ -35,6 +35,9 @@ def linear_gas_usage(positions, arr):
     x = arr[0]
     return sum([sum(range(abs(a - x)  + 1)) for a in positions])
 
+def integrated_gas_usage(positions, arr):
+    
+
 def fast_check_gas(positions):
     pass
 
@@ -50,11 +53,14 @@ with open(sys.argv[1], 'r') as in_file:
     crab_rave = list(map(int, in_file.readline().rstrip().split(',')))
 
 x = lambda a : constant_gas_usage(crab_rave, a)
-sol = optimization(crab_rave, x)
-print(sol.x)
-print(constant_gas_usage(crab_rave, sol.x))
-print(constant_gas_usage(crab_rave, [312]))
-print(constant_gas_usage(crab_rave, [313]))
+
+print(len(crab_rave))
+print(f'min: {min(crab_rave)} \nmax: {max(crab_rave)}')
+#sol = optimization(crab_rave, x)
+#print(sol.x)
+#print(constant_gas_usage(crab_rave, sol.x))
+#print(constant_gas_usage(crab_rave, [312]))
+#print(constant_gas_usage(crab_rave, [313]))
 
 
 
