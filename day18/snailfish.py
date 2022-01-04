@@ -1,6 +1,7 @@
 import sys
 import logging
 import math
+import copy
 
 class Node:
     def __init__(self):
@@ -13,11 +14,15 @@ class Node:
 
     def __add__(self, b):
         head = Node()
-        head.add_child(self)
-        head.add_child(b)
+        head.add_child(self.copy())
+        head.add_child(b.copy())
         head.update_depth()
         Node.Reduce(head)
         return head
+
+    def copy(self):
+        new_node = copy.deepcopy(self)
+        return new_node
 
     def update_depth(self):
         if self.parent:
@@ -73,9 +78,9 @@ class Node:
                 adj_left_leaf = cls.find_adjacent_leaf(n.left, 'left')
                 adj_right_leaf = cls.find_adjacent_leaf(n.right, 'right')
                 if adj_left_leaf:
-                    adj_left_leaf.data += n.right.data
+                    adj_left_leaf.data += n.left.data
                 if adj_right_leaf:
-                    adj_right_leaf.data += n.left.data
+                    adj_right_leaf.data += n.right.data
 
                 n.right = None; n.left = None
                 exit = n
@@ -137,8 +142,8 @@ class Node:
 
     @parent.setter
     def parent(self, p):
-        if self._parent:
-            logging.warn("Reassinging parent node. Potentially creating unreachable tree.")
+        # if self._parent:
+            # logging.warn("Reassinging parent node. Potentially creating unreachable tree.")
         if not isinstance(p, Node): raise AttributeError("Parent Attribute must be another Node.")
         self._parent = p
             
@@ -224,13 +229,6 @@ def add_all_numbers(num_list):
         final = final + num_list.pop(0)
 
     return final
-'''
-test1 = [ '[1,1]', '[2,2]','[3,3]', '[4,4]' ] 
-tes1_nums = []
-for num in test1_nums:
-    test1_nums.append(tree_constructor(num))
-    '''
-
 
 snail_number_list = []
 with open(sys.argv[1], 'r') as in_file:
@@ -238,12 +236,27 @@ with open(sys.argv[1], 'r') as in_file:
         snail_number_list.append(tree_constructor(line.rstrip()))
 
 
-final_number = snail_number_list.pop(0)
-while snail_number_list:
-    final_number = final_number + snail_number_list.pop(0)
+# Part 1
+'''
+final_number = add_all_numbers(snail_number_list)
 
 
-final_number.print_tree()
-print('\n')
+# final_number.print_tree()
+# print('\n')
 print(final_number.magnitude())
+'''
+
+# Part 2
+biggest_magnitude = 0
+best_pair = ()
+for i, num_1 in enumerate(snail_number_list):
+    for j, num_2 in enumerate(snail_number_list):
+        if i == j: continue
+        current_add = num_1 + num_2
+        if current_add.magnitude() > biggest_magnitude:
+            biggest_magnitude = current_add.magnitude()
+            best_pair = (num_1, num_2)
+
+print(biggest_magnitude)
+
 
